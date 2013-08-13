@@ -1,56 +1,160 @@
-function Cursor(doc){
-    this.$root = $('<span class="cursor">&zwj;</span>',doc);
-    this.timer = null;
+define('Cursor',{
+    init : function(){
+        this.root = $('<span class="cursor">&zwj;</span>')[0];
+    },
+    _getData:function(node){
+        var html = [],text = $(node).text();
 
-}
-Cursor.prototype ={
-    height:function(num){
-        this.$root.height(num);
+        for(var i= 0,l = text.length;i<l;i++){
+            html.push('<span>'+text.charAt(i)+'</span>')
+        }
+
+        var data = [];
+
+        node.innerHTML = html.join('');
+
+        $(node).children().each(function(i,n){
+            var offset = $(n).offset();
+            data[i] = {
+                'top':offset.top,
+                'left':offset.left,
+                'width':$(n).width(),
+                'height':$(n).height()
+            }
+        });
+        this.data = data;
+        node.innerHTML = text;
         return this;
     },
+    _getCurrentIndex:function(mOffset){
+        this.currentIndex = null;
+        var x = mOffset.left;
+        var me = this;
+        $.each(this.data,function(i,d){
+            if(x >= d.left && x <= d.left + d.width  ){
+                if(x - d.left > d.width/2){
+                    me.currentIndex = i + 1;
+                }else{
+                    me.currentIndex = i;
+                }
+                return false;
+            }
+        })
+
+    },
+    position:function(target,mOffset){
+
+        var me = this;
+        this.hide();
+        if(target.tagName == 'SPAN'){
+            me._getData(target)._getCurrentIndex(mOffset);
+            me.currentNode = target;
+        }else{
+            $(target).children().each(function(i,n){
+                if(n.tagName == 'SPAN'){
+                    me._getData(n)._getCurrentIndex(mOffset);
+                    if(me.currentIndex !== null){
+                        me.currentNode = n;
+                        return false;
+                    }
+                }else{
+                    var offset = $(n).offset(),
+                        width = $(n).width(),height = $(n).height();
+                    if(mOffset.left >= offset.left && mOffset.left <= offset.left + width  ){
+                        if(mOffset.left - offset.left > width/2){
+                            me.currentIndex = i + 1;
+                            me.offset({
+                                top : offset.top + height - me.height(),
+                                left : offset.left + width
+                            })
+                        }else{
+                            me.currentIndex = i;
+                            me.offset({
+                                top : offset.top + height - me.height(),
+                                left : offset.left
+                            })
+                        }
+                        me.currentNode = n;
+                        return false;
+                    }
+                }
+            })
+        }
+        if(me.currentIndex !== null){
+            var tmp = me.data[me.currentIndex];
+            if(!tmp){
+                tmp = me.data[me.data.length -1];
+                tmp.left = tmp.left + tmp.width;
+            }
+            return me.offset({
+                top : tmp.top,
+                left : tmp.left
+            });
+        }
+        return this;
+
+    },
     show:function(){
-        var $root = this.$root;
+        var $root = $(this.root);
         this.timer = setInterval(function(){
             $root.toggleClass('blink')
         },350);
         return this;
     },
+    stopblink:function(){
+        clearInterval(this.timer);
+        $(this.root).addClass('blink');
+    },
+    startblink:function(){
+        this.show()
+    },
     hide:function(){
         clearInterval(this.timer);
-        this.$root.removeClass('blink');
+        $(this.root).removeClass('blink');
         return this;
-    },
-    offset:function(obj){
-        this.$root.css(obj || {
-            top:'',
-            left:''
-        });
-        return this;
-    },
-    remove:function(){
-        this.$root.remove();
-        return this;
-    },
-    insertAfter:function(node){
-        this.$root.insertAfter(node);
-        return this;
-    },
-    insertBefore:function(node){
-        this.$root.insertBefore(node)
-        return this;
-    },
-    appendTo:function(node){
-        this.$root.appendTo($(node));
-        return this;
-    },
-    top:function(){
-        return this.$root.offset().top
     },
     height:function(){
-        return this.$root.height()
+        return $(this.root).height()
     },
-    prev:function(){
-        return this.$root[0].previousSibling;
+    offset:function(obj){
+        if(obj===undefined){
+            return this._offset
+        }else{
+            this._offset = obj;
+            $(this.root).css(obj);
+        }
+
+        return this;
+    },
+    updateX : function(offset){
+        $(this.root).css('left',$(this.root).offset().left + offset)
+    },
+    appendTo:function(node){
+        $(node).append(this.root);
+        return this;
+    },
+    line : function(node,dir){
+        var method =  dir == 'pre' ? 'previousSibling' : 'nextSibling';
+        node = node[method];
+        while(node && node.nodeType == 3){
+            node = node[method]
+        }
+        return node;
+    },
+    towardsY:function(dir){
+
+        var offset = this.offset();
+        var currentNode = this.currentNode;
+        var currentLine = currentNode.parentNode;
+        var line = this.line(currentLine,dir);
+        if(line){
+           this.position(line,offset).show()
+        }
+        return this;
+    },
+    towardsX:function(dir){
+
     }
 
-}
+
+})

@@ -1377,7 +1377,7 @@
             // jQuery.support.boxModel DEPRECATED in 1.8 since we don't support Quirks Mode
             boxModel: document.compatMode === "CSS1Compat",
 
-            // Will be defined later
+            // Will be define.js later
             deleteExpando: true,
             noCloneEvent: true,
             inlineBlockNeedsLayout: false,
@@ -1608,7 +1608,7 @@
         thisCache = cache[ id ];
 
         // jQuery data() is stored in a separate object inside the object's internal data
-        // cache in order to avoid key collisions between internal data and user-defined
+        // cache in order to avoid key collisions between internal data and user-define.js
         // data.
         if ( !pvt ) {
             if ( !thisCache.data ) {
@@ -2340,7 +2340,7 @@
             notxml = nType !== 1 || !jQuery.isXMLDoc( elem );
 
             // All attributes are lowercase
-            // Grab necessary hook if one is defined
+            // Grab necessary hook if one is define.js
             if ( notxml ) {
                 name = name.toLowerCase();
                 hooks = jQuery.attrHooks[ name ] || ( rboolean.test( name ) ? boolHook : nodeHook );
@@ -2551,7 +2551,7 @@
                     // Does not return so that setAttribute is also used
                     elem.defaultValue = value;
                 } else {
-                    // Use nodeHook if defined (#1954); otherwise setAttribute is fine
+                    // Use nodeHook if define.js (#1954); otherwise setAttribute is fine
                     return nodeHook && nodeHook.set( elem, value, name );
                 }
             }
@@ -2766,7 +2766,7 @@
                 // If event changes its type, use the special event handlers for the changed type
                 special = jQuery.event.special[ type ] || {};
 
-                // If selector defined, determine special event api type, otherwise given type
+                // If selector define.js, determine special event api type, otherwise given type
                 type = ( selector ? special.delegateType : special.bindType ) || type;
 
                 // Update special based on newly reset type
@@ -5250,7 +5250,7 @@
                         }
                     }
 
-                    // Add elements to results, through postFinder if defined
+                    // Add elements to results, through postFinder if define.js
                 } else {
                     matcherOut = condense(
                         matcherOut === results ?

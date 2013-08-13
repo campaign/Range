@@ -2,10 +2,11 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="css/cursor.css" type="text/css" rel="stylesheet">
+    <link href="css/index.css" type="text/css" rel="stylesheet">
     <script src="jquery.js"></script>
-    <script type="text/javascript" charset="utf-8" src="cursor.js"></script>
-    <script type="text/javascript" charset="utf-8" src="text.js"></script>
+    <script type="text/javascript" charset="utf-8" src="api.js"></script>
+    <!--<script type="text/javascript" charset="utf-8" src="range.js"></script>-->
+
 </head>
 <body>
 <div id="container" style="padding:10px;word-wrap:break-word;width:900px;border:1px solid #ccc">
@@ -14,173 +15,258 @@
             <span>sdfsdf战役战役首都发生地sdfsdfsdfsdfs</span>
         </div>
         <div>
-            <span>sdfsdfsdfsdfsdfsdfs</span>
+            <span>sdfsdfsd</span><img src="bdlogo.gif" /><span>fsdfsdfsdfs</span>
         </div>
         <div style="width:900px;">
-            <span>sdfsdfsdfs</span><img src="http://www.baidu.com/img/bdlogo.gif" /><span>dfsdfsdfs</span>
+            <span>sdfsdfsdfssdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs</span>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var cursor = new Cursor(document);
-      cursor.appendTo($('#container'))
-    function getLineNodes(parent,y){
-        function checkY(node,y){
-            var top = $(node).offset().top,
-                    bottom = $(node).height() + top;
-            if(top <= y && y <= bottom){
-                return true
-            }
-        }
-        function mergesibling(n){
-            var pre = n.previousSibling;
-            if(pre && pre.nodeType == 3){
-                pre.nodeValue += n.nodeValue;
-                n.parentNode.removeChild(n);
-                var next = pre.nextSibling;
-                if(next && next.nodeType == 3){
-                    pre.nodeValue += next.nodeValue;
-                    next.parentNode.removeChild(next)
-                }
-            }
-            if(n.parentNode){
-                next = n.nextSibling;
-                if(next && next.nodeType == 3){
-                    n.nodeValue += next.nodeValue;
-                    next.parentNode.removeChild(next)
-                }
-            }
-        }
-        var nodes = [];
-        var childs = [];
-        $.each(parent.childNodes,function(i,n){
-            childs.push(n)
-        });
-        $.each(childs,function(i,n){
-            cursor.remove();
-            if(n.nodeType == 3){
-                n.splitText(1);
-                var $tmp = $('<span></span>').insertBefore(n).append(n);
-                if($tmp.width() == 0){
-                    $tmp[0].parentNode.insertBefore(n,$tmp[0]);
-                    $tmp.remove();
+Editor('container')
+//    var cursor = Cursor();
+//    cursor.appendTo('#container');
+//    var re = Receiver();
+//    re.appendTo('#container');
+//    var rng = Range(document);
 
-                }
-
-                if($tmp.offset().top + $tmp.height() >= y){
-
-                }
-                var $tmp = $('<span></span>').insertBefore(n).append(n);
-                if(checkY($tmp,y)){
-
-
-
-
-                    cursor.insertBefore($tmp.first());
-
-                    if(cursor.top() + cursor.height() >= y){
-                        nodes.push(n);
-                    }
-                    while(cursor.top() + cursor.height() < y){
-                         n = n.splitText(1);
-                        cursor.insertBefore(n);
-                        if(cursor.top() + cursor.height() >= y){
-                            nodes.push(n);
-                            break;
-                        }
-                        var prev = cursor.prev();
-                        if(prev && prev.previousSibling && prev.previousSibling.nodeType == 3){
-                            prev.nodeValue += prev.previousSibling.nodeValue;
-                            prev.parentNode.removeChild(prev);
-                        }
-
-
-                    }
-                }
-
-                $tmp.remove();
-
-
-            }else{
-                checkY(n,y) && nodes.push(n)
-            }
-
-        })
-
-        return nodes;
-    }
-    $('div').mousedown(function(e){
-
-        cursor.hide()
-        var target = e.target;
-        if(target.tagName == 'DIV'){
-            $(target).children().each(function(i,span){
-
-               if(span.tagName == 'SPAN'){
-                   var data = $(span).data('text');
-
-                   if(!data){
-                       data = new Text($(span))
-                       $(span).data('text',data)
-                   }
-                   var x = e.pageX;
-                   var flag = false;
-                   $.each(data.data,function(i,d){
-                       if(x >= d.left && x <= d.left + d.width  ){
-                           if(x - d.left > d.width/2){
-                               //right
-                               cursor.offset({
-                                   top : d.top,
-                                   left : d.left + d.width
-                               })
-                           }else{
-                               cursor.offset({
-                                   top : d.top,
-                                   left : d.left
-                               })
-                           }
-                           cursor.show();
-                           flag = true;
-                           return false;
-                       }
-                   })
-                   if(flag){
-                       return false;
-                   }
-               }
-
-            })
-        }else{
-            var data = $(target).data('text');
-
-            if(!data){
-                data = new Text($(target))
-                $(target).data('text',data)
-            }
-            var x = e.pageX;
-            $.each(data.data,function(i,d){
-                if(x >= d.left && x <= d.left + d.width  ){
-                    if(x - d.left > d.width/2){
-                        //right
-                        cursor.offset({
-                            top : d.top,
-                            left : d.left + d.width
-                        })
-                    }else{
-                        cursor.offset({
-                            top : d.top,
-                            left : d.left
-                        })
-                    }
-                    cursor.show();
-                    return false;
-                }
-            })
-        }
+//var rng = new Range(document);
+//var timer;
+//function getLineNodes(parent,y){
+//    function checkY(node,y){
+//        var top = $(node).offset().top,
+//                bottom = $(node).height() + top;
+//        if(top <= y && y <= bottom){
+//            return true
+//        }
+//    }
+//    function mergesibling(n){
+//        var pre = n.previousSibling;
+//        if(pre && pre.nodeType == 3){
+//            pre.nodeValue += n.nodeValue;
+//            n.parentNode.removeChild(n);
+//            var next = pre.nextSibling;
+//            if(next && next.nodeType == 3){
+//                pre.nodeValue += next.nodeValue;
+//                next.parentNode.removeChild(next)
+//            }
+//        }
+//        if(n.parentNode){
+//            next = n.nextSibling;
+//            if(next && next.nodeType == 3){
+//                n.nodeValue += next.nodeValue;
+//                next.parentNode.removeChild(next)
+//            }
+//        }
+//    }
+//    var nodes = [];
+//    var childs = [];
+//    $.each(parent.childNodes,function(i,n){
+//        childs.push(n)
+//    });
+//    $.each(childs,function(i,n){
+//        cursor.remove();
+//        if(n.nodeType == 3){
+//            n.splitText(1);
+//            var $tmp = $('<span></span>').insertBefore(n).append(n);
+//            if($tmp.width() == 0){
+//                $tmp[0].parentNode.insertBefore(n,$tmp[0]);
+//                $tmp.remove();
+//
+//            }
+//
+//            if($tmp.offset().top + $tmp.height() >= y){
+//
+//            }
+//            var $tmp = $('<span></span>').insertBefore(n).append(n);
+//            if(checkY($tmp,y)){
+//
+//
+//
+//
+//                cursor.insertBefore($tmp.first());
+//
+//                if(cursor.top() + cursor.height() >= y){
+//                    nodes.push(n);
+//                }
+//                while(cursor.top() + cursor.height() < y){
+//                    n = n.splitText(1);
+//                    cursor.insertBefore(n);
+//                    if(cursor.top() + cursor.height() >= y){
+//                        nodes.push(n);
+//                        break;
+//                    }
+//                    var prev = cursor.prev();
+//                    if(prev && prev.previousSibling && prev.previousSibling.nodeType == 3){
+//                        prev.nodeValue += prev.previousSibling.nodeValue;
+//                        prev.parentNode.removeChild(prev);
+//                    }
+//
+//
+//                }
+//            }
+//
+//            $tmp.remove();
+//
+//
+//        }else{
+//            checkY(n,y) && nodes.push(n)
+//        }
+//
+//    })
+//
+//    return nodes;
+//}
+//$('#container').mousedown(function(e){
+//    re.clear();
+//    cursor.position(
+//        e.target,
+//        {
+//            left: e.pageX,
+//            top: e.pageY
+//        }
+//    ).show();
+//
 
 
-    })
+//    var target = e.target;
+//    if(target.tagName == 'DIV'){
+//        $(target).children().each(function(i,span){
+//
+//            if(span.tagName == 'SPAN'){
+////                   var data = $(span).data('text');
+////
+////                   if(!data){
+////                       data = new Text($(span))
+////                       $(span).data('text',data)
+////                   }
+//                data = new Text($(span))
+//                cursor.node(span);
+//                var x = e.pageX;
+//                var flag = false;
+//                $.each(data.data,function(i,d){
+//                    if(x >= d.left && x <= d.left + d.width  ){
+//                        if(x - d.left > d.width/2){
+//                            //right
+//                            cursor.index(i+1)
+//                            cursor.offset({
+//                                top : d.top,
+//                                left : d.left + d.width
+//                            })
+//                            input.offset({
+//                                top : d.top,
+//                                left : d.left + d.width
+//                            })
+//                        }else{
+//                            cursor.index(i);
+//                            cursor.offset({
+//                                top : d.top,
+//                                left : d.left
+//                            })
+//                            input.offset({
+//                                top : d.top,
+//                                left : d.left
+//                            })
+//                        }
+//                        cursor.show();
+//                        flag = true;
+//
+//                        return false;
+//                    }
+//                })
+//                if(flag){
+//                    return false;
+//                }
+//            }
+//
+//        })
+//    }else{
+////            var data = $(target).data('text');
+////
+////            if(!data){
+////                data = new Text($(target))
+////                $(target).data('text',data)
+////            }
+//        data = new Text($(target))
+//        var x = e.pageX;
+//        cursor.node(target);
+//
+//        $.each(data.data,function(i,d){
+//            if(x >= d.left && x <= d.left + d.width  ){
+//                if(x - d.left > d.width/2){
+//                    //right
+//                    cursor.index(i+1)
+//                    cursor.offset({
+//                        top : d.top,
+//                        left : d.left + d.width
+//                    })
+//                    input.offset({
+//                        top : d.top,
+//                        left : data.data[0].left
+//                    }).writeData(cursor.node())
+//
+//                }else{
+//                    cursor.index(i);
+//                    cursor.offset({
+//                        top : d.top,
+//                        left : d.left
+//                    })
+//                    input.offset({
+//                        top : d.top,
+//                        left : data.data[0].left
+//                    }).writeData(cursor.node())
+//
+//                }
+//                setTimeout(function(){
+//
+//                    rng.setStart(input.$root[0].firstChild.firstChild,cursor.index()).collapse(true).select()
+//                },50)
+//                rng = new Range(document).setStart(cursor.node().firstChild,cursor.index()).collapse(true);
+//                cursor.show();
+//                return false;
+//            }else{
+//
+//            }
+//        })
+//    }
+
+
+//})
+//var flag = false;
+//$(document).keypress(function(e){
+////               if(e.keyCode == 32){
+////                   flag = true;
+////               }
+//            cursor.stopblink();
+//            clearTimeout(timer);
+//            timer = setTimeout(function(){
+//                cursor.startblink();
+//            },100)
+//    var last = $(cursor.node()).width();
+////            var txt = String.fromCharCode(e.keyCode);
+//
+//////            var rng = new Range(document).setStart(cursor.node().firstChild,index).collapse(true);
+////               rng.insertNode(document.createTextNode(txt));
+////                rng.collapse(false)
+////
+//////            console.log(input.readData().innerHTML)
+//            cursor.node().innerHTML = input.readData().innerHTML;
+//            cursor.updataLeft($(cursor.node()).width() - last)dfsd
+//            flag = true;
+//
+//        }).keyup(function(e){
+//
+//            if(flag === false){
+//                var last = $(cursor.node()).width();
+//
+//                cursor.node().innerHTML = input.readData().innerHTML;
+//                cursor.updataLeft($(cursor.node()).width() - last)
+//            }
+//            flag = false;
+//        })
+//
+
 
 </script>
 </body>
