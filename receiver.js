@@ -6,22 +6,42 @@ define('Receiver',{
         this.initEvent();
         return this;
     },
-    initEvent : function(){
-        var me = this,timer;
-        $(document).keypress(function(e){
-            if(!me.key.keyMap[e.keyCode]){
+    _handleTxt:function(lastWidth){
+        var me = this;
 
+        var $node = $(me.cursor.currentNode);
+        if(!lastWidth){
+            lastWidth = $node.width()
+        }
+        me.cursor.currentNode.innerHTML = me.root.innerHTML;
+        var currentWidth = $node.width();
+        me.cursor.updateX(currentWidth - lastWidth);
+        lastWidth = currentWidth;
+        me.cursor.currentIndex++;
+    },
+    initEvent : function(){
+        var me = this,timer,lastWidth,
+            ime;
+        $(document).keypress(function(e){
+            ime = false;
+            if(e.target === me.root && !me.key.keyMap[e.keyCode]){
                 clearTimeout(timer);
                 me.cursor.stopblink();
                 timer = setTimeout(function(){
                     me.cursor.startblink()
                 },100);
-                var $node = $(me.cursor.currentNode);
-                var lastWidth = $node.width();
-                me.cursor.currentNode.innerHTML = me.root.innerHTML;
-                me.cursor.updateX($node.width() - lastWidth);
-                me.cursor.currentIndex++;
+                me._handleTxt(lastWidth)
             }
+        }).keyup(function(e){
+            if(e.target === me.root && ime !== false){
+                clearTimeout(timer);
+                me.cursor.stopblink();
+                timer = setTimeout(function(){
+                    me.cursor.startblink()
+                },100);
+                me._handleTxt(lastWidth);
+            }
+            ime = null;
         })
     },
     offset:function(of){
@@ -43,7 +63,7 @@ define('Receiver',{
         var me = this;
         setTimeout(function(){
             Range(document).setStart(me.root.firstChild,offset).collapse(true).select();
-        })
+        });
         return this;
 
     },
