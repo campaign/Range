@@ -15,3 +15,27 @@ $.extend2 = function (t, s) {
     }
     return t;
 };
+$.fn.getTxtData = function(){
+    var html = [],text = this.text();
+
+    for(var i= 0,l = text.length;i<l;i++){
+        html.push('<span >'+text.charAt(i)+'</span>')
+    }
+
+    var data = [];
+
+    this[0].innerHTML = html.join('');
+
+    this.children().each(function(i,n){
+        var offset = $(n).offset();
+        data[i] = {
+            'top':offset.top,
+            'left':offset.left,
+            'width':$(n).width(),
+            'height':$(n).height(),
+            text:$(n).text()
+        }
+    });
+    this[0].innerHTML = text;
+    return data;
+}
