@@ -3,27 +3,8 @@ define('Cursor',{
         this.root = $('<span class="cursor">&zwj;</span>')[0];
     },
     _getData:function(node){
-        var html = [],text = $(node).text();
 
-        for(var i= 0,l = text.length;i<l;i++){
-            html.push('<span>'+text.charAt(i)+'</span>')
-        }
-
-        var data = [];
-
-        node.innerHTML = html.join('');
-
-        $(node).children().each(function(i,n){
-            var offset = $(n).offset();
-            data[i] = {
-                'top':offset.top,
-                'left':offset.left,
-                'width':$(n).width(),
-                'height':$(n).height()
-            }
-        });
-        this.data = data;
-        node.innerHTML = text;
+        this.data = $(node).getTxtData();
         return this;
     },
     _getCurrentIndex:function(mOffset){
