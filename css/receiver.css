@@ -1,0 +1,7 @@
+.receiver{
+    position:absolute;
+    padding:0;
+    margin:0;
+    word-wrap:break-word;
+    clip:rect(1em 1em 1em 1em);
+}
