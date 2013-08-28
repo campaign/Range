@@ -1,34 +1,42 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Range : 使用js模拟原生Range的实现" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Range</title>
-  </head>
-
-  <body>
-
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/campaign/Range">View on GitHub</a>
-
-          <h1 id="project_title">Range</h1>
-          <h2 id="project_tagline">使用js模拟原生Range的实现</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/campaign/Range/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/campaign/Range/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="css/index.css" type="text/css" rel="stylesheet">
+    <script src="jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="api.js"></script>
+    <style>
+        .line{
+            display:block-inline;
+        }
+        html,body{
+            background: #f3f3f3;
+        }
+        #container{
+            background:#ffffff;
+            border:1px solid #bbb;
+            cursor:text;
+            width:800px;
+            height:900px;
+            top : 20px;
+            margin:0 auto;
+            padding:10px;
+            word-wrap:break-word;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="para">
+        <div class="line">
+            <span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span>
+        </div>
     </div>
+</div>
 
-    
+<script type="text/javascript">
+    Editor('container')
 
-  </body>
+</script>
+</body>
 </html>
