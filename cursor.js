@@ -20,11 +20,11 @@ define('Cursor',{
                 }
                 return false;
             }
+
         })
 
     },
     position:function(target,mOffset){
-
         var me = this;
         this.hide();
         if(target.tagName == 'SPAN'){
@@ -70,6 +70,18 @@ define('Cursor',{
             return me.offset({
                 top : tmp.top,
                 left : tmp.left
+            });
+        }else{
+            if(target.tagName == 'SPAN'){
+                me.currentNode = target;
+            }else{
+                me.currentNode = $('span',target).last()[0]
+            }
+            me.currentIndex = me.currentNode.textContent.length;
+            var offset = $(me.currentNode).offset();
+            me.offset( {
+                top : offset.top,
+                left : offset.left + $(me.currentNode).width()
             });
         }
         return this;

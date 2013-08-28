@@ -4,6 +4,13 @@ define('Range',{
         this.nativeSel = $.getWindow(doc).getSelection();
     },
     select:function(){
+        var start = this.nativeRange.startContainer;
+        if(start.nodeType == 1 && start.childNodes.length == 0){
+            var char = document.createTextNode('\u200b');
+            start.appendChild(char);
+            this.nativeRange.setStart(char,1);
+            this.nativeRange.collapse(true);
+        }
         this.nativeSel.removeAllRanges();
         this.nativeSel.addRange(this.nativeRange);
         return this;

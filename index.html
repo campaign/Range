@@ -9,153 +9,34 @@
         .line{
             display:block-inline;
         }
+        html,body{
+            background: #f3f3f3;
+        }
+        #container{
+            background:#ffffff;
+            border:1px solid #bbb;
+            cursor:text;
+            width:800px;
+            height:900px;
+            top : 20px;
+            margin:0 auto;
+            padding:10px;
+            word-wrap:break-word;
+        }
     </style>
 </head>
 <body>
-<div id="container" style="padding:10px;word-wrap:break-word;width:600px;border:1px solid #ccc">
-    <div>
+<div id="container">
+    <div class="para">
         <div class="line">
-            <span>sdfsdf战役战役首都发生地sdfsdfsdfsdfs</span><span>sdfsdf战役战役首都发生地sdfsdfsdfsdfs</span>
-        </div>
-    </div>
-    <div>
-        <div>
-            <span>sdfsdfsd</span><img src="bdlogo.gif" /><span>fsdfsdfsdfs</span>
-        </div>
-    </div>
-    <div>
-        <div>
-            <span>sdfsdfsdfssdfsdfsdfsdfsdfsdfsdfsdfsdfsdfs</span>
+            <span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span><span>dsfasdfasdfas</span>
         </div>
     </div>
 </div>
 
-<!--<div id="test" style="padding:10px;word-wrap:break-word;width:600px;border:1px solid #ccc">-->
-    <!--<span>sdfsdf战役战役首都发生地sdfsdfsdfsdfs</span><span>sdfsdf战役战役首都发dddddddddddddddddddddddd生地sdfsdfsdfsdfs</span>-->
-<!--</div>-->
-
 <script type="text/javascript">
     Editor('container')
 
-
-//function test(){
-//    var line = $('<div style="display:inline"></div>')[0];
-//    var node = $('#test')[0].children[0];
-//    var width = $('#test').width();
-//
-//    var fraglines = document.createDocumentFragment();
-//    function checkEmptySpan(line){
-//        var node = line.lastChild;
-//        while(node){
-//            if(!node.lastChild){
-//                var tmp = node.previousElementSibling;
-//                $(node).remove();
-//                node = tmp;
-//
-//            }
-//            break;
-//        }
-//    }
-//    while(node){
-//        var span = $('<span ></span>')[0];
-//        var tmpNode = span.cloneNode(false);
-//        var nodetext = $(node).text();
-//        var fragSpans = document.createDocumentFragment();
-//        for(var i= 0,ci;ci=nodetext.charAt(i);i++){
-//            if(/[\u4e00-\u9fa5]|\s/.test(ci)){
-//                if(tmpNode.firstChild){
-//                    fragSpans.appendChild(tmpNode);
-//                    tmpNode = span.cloneNode(false);
-//                }
-//                tmpNode.appendChild(document.createTextNode(ci));
-//                fragSpans.appendChild(tmpNode);
-//                tmpNode = span.cloneNode(false);
-//            }else{
-//                tmpNode.innerHTML = tmpNode.innerHTML + ci;
-//            }
-//        }
-//        if(tmpNode.firstChild && (!tmpNode.parentNode || tmpNode.parentNode.nodeType == 11)){
-//            fragSpans.appendChild(tmpNode)
-//        }
-//        node.innerHTML = '';
-//
-//        if(line.parentNode !== document.body){
-//            $(line).appendTo(document.body);
-//        }
-//
-//
-//        var tmpNode = node.cloneNode(false);
-//        $(line).append(tmpNode);
-//        while(fragSpans.firstChild){
-//            var first = fragSpans.firstChild;
-//            tmpNode.appendChild(first);
-//            if($(line).width() > width){
-//                var last = tmpNode.lastChild;
-//                fragSpans.insertBefore(last,fragSpans.firstChild);
-//
-//                if(!tmpNode.lastChild && line.firstChild === tmpNode){
-//
-//                }else{
-//                    tmpNode.innerHTML = tmpNode.textContent;
-//                    checkEmptySpan(line);
-//                    fraglines.appendChild(line);
-//                    line = line.cloneNode(false);
-//                    tmpNode = tmpNode.cloneNode(false);
-//                    $(line).appendTo(document.body).append(tmpNode);
-//                }
-//                if(last.textContent.length  != 1){
-//                    tmpNode.appendChild(last);
-//
-//                    var text = last.textContent;
-//                    var i = text.length - 1;
-//                    if($(line).width() > width){
-//                        while($(line).width() > width){
-//                            last.textContent = text.slice(0,i--);
-//                        }
-//                        tmpNode.textContent = last.textContent;
-//                        line.appendChild(tmpNode);
-//                        checkEmptySpan(line);
-//
-//                        fraglines.appendChild(line);
-//                        line = line.cloneNode(false);
-//                        tmpNode = tmpNode.cloneNode(false);
-//                        $(line).appendTo(document.body);
-//                        line.appendChild(tmpNode);
-//                        last.textContent = text.slice(i+1);
-//
-//                        fragSpans.insertBefore(last,fragSpans.firstChild);
-//                    }else{
-//                        continue;
-//                    }
-//                }
-//
-//
-//            }
-//        }
-//        tmpNode.innerHTML = tmpNode.textContent;
-//        if(tmpNode.firstChild && (!tmpNode.parentNode || tmpNode.parentNode.nodeType == 11)){
-//            line.appendChild(node.cloneNode(true));
-//
-//        }
-//        node.textContent = nodetext;
-//        node = node.nextElementSibling;
-//    }
-//    if(line.parentNode === document.body){
-//        fraglines.appendChild(line);
-//    }
-//    return fraglines;
-//
-//}
-//
-//    var frag = test()
-//debugger
-//
-//    var div = $('<div></div>').appendTo(document.body)[0];
-//    for(var i= 0,ci;ci=frag.childNodes[i++];){
-//        $(ci).css('display','')
-//    }
-//debugger
-//div.appendChild(frag)
 </script>
 </body>
 </html>

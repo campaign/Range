@@ -7,9 +7,8 @@ define('Receiver',{
         this.initEvent();
         return this;
     },
-    _updateCursor : function(){
-
-        var count = 0,index = this.currentCountIndex,cursor = this.cursor;
+    _getNodeAndOffsetByCountIndex : function(){
+        var count = 0,index = this.currentCountIndex;
         for(var i = 0,li;li=this.currentPara.children[i++];){
             for(var j= 0,sj;sj=li.children[j++];){
                 count += sj.textContent.length;
@@ -17,32 +16,42 @@ define('Receiver',{
                     var offset = $(sj).offset();
                     if(count == index){
 
-                        cursor.offset({
-                            top : offset.top,
-                            left : offset.left + $(sj).width()
-                        })
+                        return {
+                            node : sj,
+                            offset : sj.textContent.length
+                        }
                     }else{
                         count -= sj.textContent.length;
                         count = index - count;
-                        var text = sj.textContent;
-                        var textNode = sj.firstChild.splitText(count);
-                        var left = $('<span></span>').insertBefore(textNode).offset().left;
-                        cursor.offset({
-                            top : offset.top,
-                            left : left
-                        })
-                        sj.innerHTML = text;
+                        return {
+                            node : sj,
+                            offset : count
+                        };
 
                     }
-                    return false;
                 }
 
             }
 
         }
+    },
+    _updateCursor : function(){
+        var obj = this._getNodeAndOffsetByCountIndex(),cursor = this.cursor;
+        var node = obj.node;
+        var offset = $(obj.node).offset();
+        var text = node.textContent;
+        var textNode = node.firstChild.splitText(obj.offset);
+        offset = $('<span></span>').insertBefore(textNode).offset()
+        cursor.offset({
+            top : offset.top,
+            left : offset.left
+        })
+
+        obj.node.innerHTML = text;
 
 
     },
+
     getCountIndexInPara : function(){
 
         var rng = this.nativeSel.getRangeAt(0);
@@ -67,7 +76,7 @@ define('Receiver',{
         this.tmppara.style.width = $(this.root).width() + 'px';
         this.currentCountIndex = this.getCountIndexInPara();
         this.tmppara.innerHTML = this.root.innerHTML;
-        var line = $('<div></div>').css('display','inline')[0];
+        var line = $('<div class="line"></div>').css('display','inline')[0];
         var node = this.tmppara.firstChild;
         var width = this.width;
 
@@ -190,12 +199,17 @@ define('Receiver',{
     initEvent : function(){
         var me = this,timer,
             ime;
-        var keyCode;
+
         me.lastlinewidth = 0;
-        $(document).keypress(function(e){
+        $(document).keydown(function(e){
+            if(me.key.keyMap[e.keyCode]){
+                me.key.handlerEvent(e.keyCode,me,e);
+                return;
+            }
+        }).keypress(function(e){
 
             ime = false;
-            if(!me.key.keyMap[keyCode]){
+            if(!me.key.keyMap[e.keyCode]){
                 clearTimeout(timer);
                 me.cursor.stopblink();
                 timer = setTimeout(function(){
@@ -205,7 +219,8 @@ define('Receiver',{
                 me._handleTxt()
             }
         }).keyup(function(e){
-            if(e.target === me.root && ime !== false){
+
+                if(e.target === me.root && ime !== false){
                     clearTimeout(timer);
                     me.cursor.stopblink();
                     timer = setTimeout(function(){
@@ -244,5 +259,27 @@ define('Receiver',{
     clear:function(){
         this.root.innerHTML = '';
         return this;
+    },
+
+    setRootContent:function(){
+        var me = this;
+        var clonedCurrentNode;
+        var frag = document.createDocumentFragment();
+        $(this.currentPara).children().each(function(i,n){
+            $(n).children().each(function(j,ni){
+                var node = ni.cloneNode(true);
+                if(ni === me.cursor.currentNode){
+                    clonedCurrentNode = node;
+                }
+                frag.appendChild(node)
+            })
+        });
+        $(this.root).html('').append(frag)
+            .offset({
+                top :$(this.currentPara).offset().top,
+                left : $(this.currentPara).offset().left
+            })
+        $(this.root).width($(this.currentPara).width());
+        return clonedCurrentNode;
     }
 });

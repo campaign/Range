@@ -39,3 +39,40 @@ $.fn.getTxtData = function(){
     this[0].innerHTML = text;
     return data;
 }
+
+$.fn.breakParent = function(parent,offset){
+    var node = this[0],
+        frag = document.createDocumentFragment();
+
+    var nodeClone = node.cloneNode(false);
+    var text = node.textContent;
+    node.textContent = text.slice(0,offset);
+    nodeClone.textContent = text.slice(offset);
+    frag.appendChild(nodeClone);
+
+    while(node !== parent){
+        while(node.nextElementSibling){
+            frag.appendChild(node.nextElementSibling)
+        }
+
+        var parentClone = node.parentNode.cloneNode(false);
+        parentClone.appendChild(frag)
+        frag.appendChild(parentClone);
+        node = node.parentNode;
+    }
+    parent.parentNode.insertBefore(frag,parent.nextSibling)
+}
+$.fn.allChildWidth = function(){
+    var width = 0;
+    $(this[0]).children().each(function(i,c){
+        width += $(c).width()
+    });
+    return width;
+}
+
+$.fn.lastChild = function(){
+    return this.children().last()
+}
+$.fn.firstChild = function(){
+    return this.children().first()
+}
