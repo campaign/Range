@@ -13,9 +13,12 @@ define('Receiver',{
             for(var j= 0,sj;sj=li.children[j++];){
                 count += sj.textContent.length;
                 if(count >= index){
-                    var offset = $(sj).offset();
-                    if(count == index){
 
+                    if(count == index){
+                        //当空格时刚好是末位，应该到下一行的开头
+                        if(/\s$/.test(sj.textContent)){
+                            continue;
+                        }
                         return {
                             node : sj,
                             offset : sj.textContent.length
@@ -38,16 +41,26 @@ define('Receiver',{
     _updateCursor : function(){
         var obj = this._getNodeAndOffsetByCountIndex(),cursor = this.cursor;
         var node = obj.node;
-        var offset = $(obj.node).offset();
-        var text = node.textContent;
-        var textNode = node.firstChild.splitText(obj.offset);
-        offset = $('<span></span>').insertBefore(textNode).offset()
-        cursor.offset({
-            top : offset.top,
-            left : offset.left
-        })
 
-        obj.node.innerHTML = text;
+
+        if(node.firstChild){
+            var text = node.textContent;
+            var textNode = node.firstChild.splitText(obj.offset);
+            var offset = $('<span></span>').insertBefore(textNode).offset()
+            cursor.offset({
+                top : offset.top,
+                left : offset.left
+            })
+
+            obj.node.innerHTML = text;
+        }else{
+            offset = $(node).offset();
+            cursor.offset({
+                top : offset.top,
+                left : offset.left
+            })
+        }
+
 
 
     },
@@ -55,13 +68,13 @@ define('Receiver',{
     getCountIndexInPara : function(){
 
         var rng = this.nativeSel.getRangeAt(0);
-        var count = rng.startOffset;
+        var count = rng.startOffset + (/\u200b/.test(rng.startContainer.textContent) ? -1 : 0);
         var parent = rng.startContainer.parentNode;
 
         while(1){
             var pre = parent.previousElementSibling;
             if(pre){
-                count += pre.textContent.length;
+                count += pre.textContent.replace(/\u200b/,'').length;
                 parent = pre;
             }else{
                 break;
@@ -72,13 +85,13 @@ define('Receiver',{
     _updateLines : function(){
 
 
-
-        this.tmppara.style.width = $(this.root).width() + 'px';
+        var width = $(this.root).width();
+        this.tmppara.style.width = width + 'px';
         this.currentCountIndex = this.getCountIndexInPara();
-        this.tmppara.innerHTML = this.root.innerHTML;
+        this.tmppara.innerHTML = this.root.innerHTML.replace(/\u200b/,'');
         var line = $('<div class="line"></div>').css('display','inline')[0];
         var node = this.tmppara.firstChild;
-        var width = this.width;
+
 
         var fraglines = document.createDocumentFragment();
         function checkEmptySpan(line){
@@ -192,6 +205,10 @@ define('Receiver',{
 
             me.currentPara.innerHTML = '';
             me.currentPara.appendChild(frag);
+//            var first = me.currentPara.firstChild.firstChild;
+//            if(/^[\u200b]/.test(first.textContent)){
+//                first.textContent = first.textContent.replace(/^[\u200b]/,'')
+//            }
             me._updateCursor();
         })
 
@@ -207,7 +224,6 @@ define('Receiver',{
                 return;
             }
         }).keypress(function(e){
-
             ime = false;
             if(!me.key.keyMap[e.keyCode]){
                 clearTimeout(timer);
@@ -243,10 +259,7 @@ define('Receiver',{
 
         return this;
     },
-    data:function(node){
-        this.root.innerHTML = node.innerHTML;
-        return this;
-    },
+
     setCursor:function(node,offset){
         var me = this;
         me.range = Range(document);

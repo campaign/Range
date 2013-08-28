@@ -1,6 +1,6 @@
 define('Key',{
     keyMap:{3: "Enter", 8: "Backspace", 9: "Tab", 13: "Enter", 16: "Shift", 17: "Ctrl", 18: "Alt",
-        19: "Pause", 20: "CapsLock", 27: "Esc", 32: "Space", 33: "PageUp", 34: "PageDown", 35: "End",
+        19: "Pause", 20: "CapsLock", 27: "Esc", 33: "PageUp", 34: "PageDown", 35: "End", //32: "Space",
         36: "Home", 37: "Left", 38: "Up", 39: "Right", 40: "Down", 44: "PrintScrn", 45: "Insert",
         46: "Delete", 59: ";", 91: "Mod", 92: "Mod", 93: "Mod", 109: "-", 107: "=", 127: "Delete",
         186: ";", 187: "=", 188: ",", 189: "-", 190: ".", 191: "/", 192: "`", 219: "[", 220: "\\",
@@ -16,8 +16,10 @@ define('Key',{
                 e.preventDefault();
                 break;
             case 8:
-                this._handlerBackspace();
-                e.preventDefault();
+                var result = this._handlerBackspace();
+                if(!result){
+                    e.preventDefault();
+                }
                 break;
             case 38:
                 var result = this._handlerUp();
@@ -55,11 +57,33 @@ define('Key',{
         re.currentPara = re.currentPara.nextElementSibling;
         re.setRootContent();
         re._updateCursor();
-        var node = re.root.firstChild.firstChild;
+        var node = re.root.firstChild;
         re.setCursor(node.firstChild||node,0);
     },
     _handlerBackspace:function(){
+        var re = this.recevier;
+        re.currentCountIndex = re.getCountIndexInPara();
+        if(re.currentCountIndex == 0){
+            var para = re.currentPara.previousElementSibling;
+            if(para){
+                var node = $(re.currentPara).firstChild().firstChild();
+                while(re.currentPara.firstChild){
+                    para.appendChild(re.currentPara.firstChild)
+                };
+                $(re.currentPara).remove();
 
+                re.currentPara = para;
+
+                re.cursor.currentNode = node[0];
+                var node = re.setRootContent();
+                re.setCursor(node.firstChild||node,0);
+//                re._updateLines();
+//                re._updateCursor();
+
+            }
+        }else{
+            return true;
+        }
     },
     _getPreLine:function(line){
         var pre = line.previousElementSibling;
